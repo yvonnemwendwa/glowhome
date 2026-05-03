@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <!-- Page title shown in browser tab -->
+    <title>GlowHome – Salon at Your Doorstep</title>
+
+    <!-- Ensures correct character rendering and mobile scaling -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Loads TailwindCSS from CDN — required for all utility classes to work -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!--
+      ╔══════════════════════════════════════════════════════╗
+      ║  EMAILJS SETUP — STEP 1 OF 2                        ║
+      ║  1. Go to https://emailjs.com and create an account ║
+      ║  2. Create an Email Service (e.g. Gmail)            ║
+      ║  3. Create an Email Template with these variables:  ║
+      ║       {{from_name}}, {{phone}}, {{address}},        ║
+      ║       {{service}}, {{price}}, {{duration}},         ║
+      ║       {{stylist}}, {{date}}, {{time}}               ║
+      ║  4. Paste your Public Key below                     ║
+      ╚══════════════════════════════════════════════════════╝
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+      // STEP 2 OF 2 — Replace YOUR_PUBLIC_KEY with the key from EmailJS dashboard
+      emailjs.init("X439b8gsH0f9NKNE4");
+    </script>
+
+  </head>
+
+  <body class="bg-stone-100 font-sans">
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- NAVBAR                                          -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <nav class="bg-stone-900 px-6 py-4 flex justify-between items-center">
+      <span class="text-white font-medium tracking-wide">GlowHome</span>
+      <button class="bg-amber-500 text-stone-900 text-sm font-medium px-4 py-1.5 rounded-full">
+        My bookings
+      </button>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- HERO SECTION                                    -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="bg-stone-800 px-6 py-12 text-center">
+      <span class="inline-block bg-amber-500/20 text-amber-400 text-xs px-3 py-1 rounded-full mb-4 border border-amber-500/30">
+        We come to you
+      </span>
+      <h1 class="text-white text-2xl font-medium leading-snug mb-3">
+        Salon experience,<br />at your doorstep
+      </h1>
+      <p class="text-stone-400 text-sm leading-relaxed max-w-xs mx-auto mb-6">
+        Book a certified stylist who travels to your home. Nairobi-wide coverage.
+      </p>
+      <button class="bg-amber-500 text-stone-900 text-sm font-medium px-7 py-3 rounded-full">
+        Book a session
+      </button>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SERVICES SECTION                                -->
+    <!-- Each card calls selectService() with the        -->
+    <!-- service name, price, and duration so the        -->
+    <!-- summary bar at the bottom updates immediately.  -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="px-6 py-8">
+      <p class="text-xs font-medium text-stone-500 uppercase tracking-widest mb-4">
+        Choose a braiding style
+      </p>
+      <div class="grid grid-cols-2 gap-3">
+
+        <!-- Service Card 1 — Box braids -->
+        <div onclick="selectService(this, 'Box braids', 'Ksh 1,500', '3–4 hrs')"
+             class="service-card bg-white rounded-xl border border-stone-200 p-4 cursor-pointer hover:border-amber-400">
+          <div class="text-2xl mb-2">🟤</div>
+          <p class="text-sm font-medium text-stone-900">Box braids</p>
+          <p class="text-sm font-medium text-amber-600">Ksh 1,500</p>
+          <p class="text-xs text-stone-400">3–4 hrs</p>
+        </div>
+
+        <!-- Service Card 2 — Knotless braids -->
+        <div onclick="selectService(this, 'Knotless braids', 'Ksh 2,000', '4–5 hrs')"
+             class="service-card bg-white rounded-xl border border-stone-200 p-4 cursor-pointer hover:border-amber-400">
+          <div class="text-2xl mb-2">✨</div>
+          <p class="text-sm font-medium text-stone-900">Knotless braids</p>
+          <p class="text-sm font-medium text-amber-600">Ksh 2,000</p>
+          <p class="text-xs text-stone-400">4–5 hrs</p>
+        </div>
+
+        <!-- Service Card 3 — Faux locs -->
+        <div onclick="selectService(this, 'Faux locs', 'Ksh 2,000', '5–6 hrs')"
+             class="service-card bg-white rounded-xl border border-stone-200 p-4 cursor-pointer hover:border-amber-400">
+          <div class="text-2xl mb-2">🌿</div>
+          <p class="text-sm font-medium text-stone-900">Faux locs</p>
+          <p class="text-sm font-medium text-amber-600">Ksh 2,000</p>
+          <p class="text-xs text-stone-400">5–6 hrs</p>
+        </div>
+
+        <!-- Service Card 4 — Twist braids -->
+        <div onclick="selectService(this, 'Twist braids', 'Ksh 1,200', '2–3 hrs')"
+             class="service-card bg-white rounded-xl border border-stone-200 p-4 cursor-pointer hover:border-amber-400">
+          <div class="text-2xl mb-2">🌀</div>
+          <p class="text-sm font-medium text-stone-900">Twist braids</p>
+          <p class="text-sm font-medium text-amber-600">Ksh 1,200</p>
+          <p class="text-xs text-stone-400">2–3 hrs</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- STYLIST SECTION                                 -->
+    <!-- Each braider card calls selectStylist().        -->
+    <!-- If a braider has been booked, clicking her      -->
+    <!-- shows an alert instead of selecting her.        -->
+    <!-- Booked braiders get a grey overlay + badge.     -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="px-6 pb-6">
+      <p class="text-xs font-medium text-stone-500 uppercase tracking-widest mb-4">
+        Pick a braider
+      </p>
+      <div class="flex gap-3 overflow-x-auto pb-2">
+
+        <!-- Braider 1 — Joy -->
+        <div onclick="selectStylist(this, 'Joy')"
+             class="stylist-card flex flex-col items-center cursor-pointer flex-shrink-0"
+             data-name="Joy">
+          <div class="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-amber-800 font-medium text-lg border-2 border-transparent">
+            J
+          </div>
+          <p class="stylist-name text-xs font-medium text-stone-800 mt-1">Joy</p>
+          <p class="text-xs text-stone-400">Box braids</p>
+        </div>
+
+        <!-- Braider 2 — Faith -->
+        <div onclick="selectStylist(this, 'Faith')"
+             class="stylist-card flex flex-col items-center cursor-pointer flex-shrink-0"
+             data-name="Faith">
+          <div class="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-amber-800 font-medium text-lg border-2 border-transparent">
+            F
+          </div>
+          <p class="stylist-name text-xs font-medium text-stone-800 mt-1">Faith</p>
+          <p class="text-xs text-stone-400">Knotless</p>
+        </div>
+
+        <!-- Braider 3 — Lydiah -->
+        <div onclick="selectStylist(this, 'Lydiah')"
+             class="stylist-card flex flex-col items-center cursor-pointer flex-shrink-0"
+             data-name="Lydiah">
+          <div class="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-amber-800 font-medium text-lg border-2 border-transparent">
+            L
+          </div>
+          <p class="stylist-name text-xs font-medium text-stone-800 mt-1">Lydiah</p>
+          <p class="text-xs text-stone-400">Faux locs</p>
+        </div>
+
+        <!-- Braider 4 — Peace -->
+        <div onclick="selectStylist(this, 'Peace')"
+             class="stylist-card flex flex-col items-center cursor-pointer flex-shrink-0"
+             data-name="Peace">
+          <div class="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-amber-800 font-medium text-lg border-2 border-transparent">
+            P
+          </div>
+          <p class="stylist-name text-xs font-medium text-stone-800 mt-1">Peace</p>
+          <p class="text-xs text-stone-400">Twist braids</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- DATE PICKER SECTION                             -->
+    <!-- selectChip() uses the group ID 'date-picker'   -->
+    <!-- so it only deselects other date chips,          -->
+    <!-- not the time chips below.                       -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="px-6 pb-6">
+      <p class="text-xs font-medium text-stone-500 uppercase tracking-widest mb-4">
+        Select a date
+      </p>
+      <div class="flex gap-2 overflow-x-auto pb-2" id="date-picker">
+
+        <div onclick="selectChip(this, 'date-picker', 'Mon 5')"
+             class="date-chip flex flex-col items-center bg-white border border-stone-200 rounded-xl px-4 py-3 cursor-pointer flex-shrink-0 hover:border-amber-400">
+          <span class="text-xs text-stone-400">Mon</span>
+          <span class="text-sm font-medium text-stone-800">5</span>
+        </div>
+
+        <div onclick="selectChip(this, 'date-picker', 'Tue 6')"
+             class="date-chip flex flex-col items-center bg-white border border-stone-200 rounded-xl px-4 py-3 cursor-pointer flex-shrink-0 hover:border-amber-400">
+          <span class="text-xs text-stone-400">Tue</span>
+          <span class="text-sm font-medium text-stone-800">6</span>
+        </div>
+
+        <div onclick="selectChip(this, 'date-picker', 'Wed 7')"
+             class="date-chip flex flex-col items-center bg-white border border-stone-200 rounded-xl px-4 py-3 cursor-pointer flex-shrink-0 hover:border-amber-400">
+          <span class="text-xs text-stone-400">Wed</span>
+          <span class="text-sm font-medium text-stone-800">7</span>
+        </div>
+
+        <div onclick="selectChip(this, 'date-picker', 'Thu 8')"
+             class="date-chip flex flex-col items-center bg-white border border-stone-200 rounded-xl px-4 py-3 cursor-pointer flex-shrink-0 hover:border-amber-400">
+          <span class="text-xs text-stone-400">Thu</span>
+          <span class="text-sm font-medium text-stone-800">8</span>
+        </div>
+
+        <div onclick="selectChip(this, 'date-picker', 'Fri 9')"
+             class="date-chip flex flex-col items-center bg-white border border-stone-200 rounded-xl px-4 py-3 cursor-pointer flex-shrink-0 hover:border-amber-400">
+          <span class="text-xs text-stone-400">Fri</span>
+          <span class="text-sm font-medium text-stone-800">9</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- TIME PICKER SECTION                             -->
+    <!-- Same selectChip() function but group ID is      -->
+    <!-- 'time-picker' — keeps date and time selections  -->
+    <!-- completely independent of each other.           -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="px-6 pb-6">
+      <p class="text-xs font-medium text-stone-500 uppercase tracking-widest mb-4">
+        Select a time
+      </p>
+      <div class="grid grid-cols-3 gap-2" id="time-picker">
+
+        <div onclick="selectChip(this, 'time-picker', '8:00 AM')"
+             class="time-chip bg-white border border-stone-200 rounded-xl py-2 text-center text-sm text-stone-700 cursor-pointer hover:border-amber-400">
+          8:00 AM
+        </div>
+        <div onclick="selectChip(this, 'time-picker', '10:00 AM')"
+             class="time-chip bg-white border border-stone-200 rounded-xl py-2 text-center text-sm text-stone-700 cursor-pointer hover:border-amber-400">
+          10:00 AM
+        </div>
+        <div onclick="selectChip(this, 'time-picker', '12:00 PM')"
+             class="time-chip bg-white border border-stone-200 rounded-xl py-2 text-center text-sm text-stone-700 cursor-pointer hover:border-amber-400">
+          12:00 PM
+        </div>
+        <div onclick="selectChip(this, 'time-picker', '2:00 PM')"
+             class="time-chip bg-white border border-stone-200 rounded-xl py-2 text-center text-sm text-stone-700 cursor-pointer hover:border-amber-400">
+          2:00 PM
+        </div>
+        <div onclick="selectChip(this, 'time-picker', '4:00 PM')"
+             class="time-chip bg-white border border-stone-200 rounded-xl py-2 text-center text-sm text-stone-700 cursor-pointer hover:border-amber-400">
+          4:00 PM
+        </div>
+        <div onclick="selectChip(this, 'time-picker', '6:00 PM')"
+             class="time-chip bg-white border border-stone-200 rounded-xl py-2 text-center text-sm text-stone-700 cursor-pointer hover:border-amber-400">
+          6:00 PM
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- BOOKING FORM SECTION                            -->
+    <!-- Collects name, address, and phone number.       -->
+    <!-- All three are validated before confirming.      -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="px-6 pb-10">
+      <p class="text-xs font-medium text-stone-500 uppercase tracking-widest mb-4">
+        Your details
+      </p>
+      <div class="bg-white rounded-xl border border-stone-200 p-4 flex flex-col gap-4">
+
+        <!-- Full name -->
+        <div>
+          <label class="text-xs text-stone-500 block mb-1">Full name</label>
+          <input
+            id="input-name"
+            type="text"
+            placeholder="e.g. Jane Doe"
+            class="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm text-stone-800 outline-none focus:border-amber-400"
+          />
+        </div>
+
+        <!-- Home address -->
+        <div>
+          <label class="text-xs text-stone-500 block mb-1">Your address (we come to you)</label>
+          <input
+            id="input-address"
+            type="text"
+            placeholder="e.g. Westlands, Nairobi"
+            class="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm text-stone-800 outline-none focus:border-amber-400"
+          />
+        </div>
+
+        <!-- Phone number -->
+        <div>
+          <label class="text-xs text-stone-500 block mb-1">Phone number</label>
+          <input
+            id="input-phone"
+            type="tel"
+            placeholder="e.g. 0712 345 678"
+            class="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm text-stone-800 outline-none focus:border-amber-400"
+          />
+        </div>
+
+      </div>
+
+      <!-- Validation error message — hidden until a failed confirm attempt -->
+      <p id="error-msg" class="hidden text-xs text-red-500 mt-3 px-1"></p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- BOOKING SUMMARY BAR                             -->
+    <!-- Updates in real time as the user selects a     -->
+    <!-- service via selectService().                    -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="px-6 pb-4">
+      <div class="bg-white border border-stone-200 rounded-xl p-4 flex justify-between items-center">
+        <div>
+          <p class="text-xs text-stone-400">Service</p>
+          <p class="text-sm font-medium text-stone-900" id="summary-service">Box braids</p>
+        </div>
+        <div>
+          <p class="text-xs text-stone-400">Duration</p>
+          <p class="text-sm font-medium text-stone-900" id="summary-duration">3–4 hrs</p>
+        </div>
+        <div>
+          <p class="text-xs text-stone-400">Total</p>
+          <p class="text-sm font-medium text-amber-600" id="summary-price">Ksh 1,500</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- CONFIRM BUTTON                                  -->
+    <!-- Calls confirmBooking() which validates the      -->
+    <!-- form, sends the email, and shows success.       -->
+    <!-- The button is disabled after a successful       -->
+    <!-- booking to prevent duplicate submissions.       -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="px-6 pb-12">
+      <button
+        id="confirm-btn"
+        onclick="confirmBooking()"
+        class="w-full bg-stone-900 text-white text-sm font-medium py-4 rounded-xl"
+      >
+        Confirm booking
+      </button>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SUCCESS MESSAGE                                 -->
+    <!-- Hidden by default. Revealed and scrolled into  -->
+    <!-- view after a successful booking + email send.  -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div id="success-message" class="hidden mx-6 mb-10 bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+      <p class="text-2xl mb-2">🎉</p>
+      <p class="text-sm font-medium text-green-800">Booking confirmed!</p>
+      <p class="text-xs text-green-600 mt-1">Your braider is on the way. Check your phone for updates.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- JAVASCRIPT                                                      -->
+    <!--                                                                 -->
+    <!-- STATE VARIABLES — track what the user has selected             -->
+    <!--   selectedService  — name of chosen braiding style             -->
+    <!--   selectedPrice    — price of chosen service                   -->
+    <!--   selectedDuration — duration of chosen service                -->
+    <!--   selectedStylist  — name of the chosen braider (NEW)          -->
+    <!--   selectedDate     — the date chip the user picked (NEW)       -->
+    <!--   selectedTime     — the time chip the user picked (NEW)       -->
+    <!--   bookedStylists   — Set of braider names already booked (NEW) -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <script>
+
+      // ── State ─────────────────────────────────────────────────────────
+      // These variables always reflect the user's current selections.
+      // They default to the first service so the summary bar is never blank.
+      var selectedService  = 'Box braids';
+      var selectedPrice    = 'Ksh 1,500';
+      var selectedDuration = '3–4 hrs';
+      var selectedStylist  = '';   // empty until the user picks a braider
+      var selectedDate     = '';   // empty until the user picks a date chip
+      var selectedTime     = '';   // empty until the user picks a time chip
+
+      // bookedStylists keeps track of braiders who have been confirmed
+      // for a booking in this session. They cannot accept a second booking.
+      var bookedStylists = new Set();
+
+
+      // ── selectService ─────────────────────────────────────────────────
+      // Called when the user taps a service card.
+      // Updates the three state variables and the summary bar at the bottom.
+      // Also highlights the selected card with an amber border.
+      function selectService(el, name, price, duration) {
+        // Update state
+        selectedService  = name;
+        selectedPrice    = price;
+        selectedDuration = duration;
+
+        // Update the summary bar text
+        document.getElementById('summary-service').textContent  = name;
+        document.getElementById('summary-price').textContent    = price;
+        document.getElementById('summary-duration').textContent = duration;
+
+        // Highlight selected card — remove amber border from all cards first,
+        // then add it only to the one that was just tapped
+        document.querySelectorAll('.service-card').forEach(function(card) {
+          card.classList.remove('border-amber-400');
+          card.classList.add('border-stone-200');
+        });
+        el.classList.remove('border-stone-200');
+        el.classList.add('border-amber-400');
+      }
+
+
+      // ── selectStylist ─────────────────────────────────────────────────
+      // Called when the user taps a braider avatar.
+      // If the braider is already booked (in bookedStylists), we alert
+      // and return early — they cannot be selected again.
+      // Otherwise, we highlight the selected avatar and update state.
+      function selectStylist(el, name) {
+        // Block selection if this braider is already booked
+        if (bookedStylists.has(name)) {
+          alert(name + ' is already booked and unavailable. Please choose another braider.');
+          return;
+        }
+
+        // Update state
+        selectedStylist = name;
+
+        // Remove amber highlight from all braider avatars,
+        // then apply it only to the one that was tapped
+        document.querySelectorAll('.stylist-card div').forEach(function(avatar) {
+          avatar.classList.remove('border-amber-500');
+          avatar.classList.add('border-transparent');
+        });
+        el.querySelector('div').classList.remove('border-transparent');
+        el.querySelector('div').classList.add('border-amber-500');
+      }
+
+
+      // ── selectChip ───────────────────────────────────────────────────
+      // Called when the user taps a date or time chip.
+      // The 'group' parameter is the ID of the containing section
+      // ('date-picker' or 'time-picker') so the two groups never
+      // interfere with each other — selecting a date won't deselect a time.
+      // The 'value' parameter stores what was selected into state.
+      function selectChip(el, group, value) {
+        // Deselect all chips in this group
+        document.querySelectorAll('#' + group + ' > div').forEach(function(chip) {
+          chip.classList.remove('bg-stone-900', 'border-stone-900', 'text-white');
+          chip.classList.add('bg-white', 'border-stone-200', 'text-stone-700');
+        });
+
+        // Highlight the tapped chip
+        el.classList.remove('bg-white', 'border-stone-200', 'text-stone-700');
+        el.classList.add('bg-stone-900', 'border-stone-900', 'text-white');
+
+        // Save selection into the correct state variable
+        if (group === 'date-picker') selectedDate = value;
+        if (group === 'time-picker') selectedTime = value;
+      }
+
+
+      // ── markStylistAsBooked ───────────────────────────────────────────
+      // After a successful booking, this function adds the braider to the
+      // bookedStylists Set and updates their card visually:
+      //   - dims the avatar with opacity
+      //   - changes the name label to show "Booked"
+      // This makes it clear to the next user that she is unavailable.
+      function markStylistAsBooked(name) {
+        bookedStylists.add(name);
+
+        document.querySelectorAll('.stylist-card').forEach(function(card) {
+          if (card.getAttribute('data-name') === name) {
+            // Dim the avatar circle
+            var avatar = card.querySelector('div');
+            avatar.classList.add('opacity-40');
+
+            // Replace the name label with a "Booked" badge
+            var nameLabel = card.querySelector('.stylist-name');
+            nameLabel.textContent = 'Booked';
+            nameLabel.classList.remove('text-stone-800');
+            nameLabel.classList.add('text-red-400');
+          }
+        });
+      }
+
+
+      // ── confirmBooking ────────────────────────────────────────────────
+      // Called when the user taps "Confirm booking".
+      // Steps:
+      //   1. Read form values
+      //   2. Validate — all fields + stylist + date + time must be filled
+      //   3. Validate phone — must contain at least 10 digits
+      //   4. Send email via EmailJS
+      //   5. On success: mark stylist as booked, show success message,
+      //      disable the confirm button to prevent duplicate submissions
+      function confirmBooking() {
+        // ── Step 1: Read form values ──
+        var name    = document.getElementById('input-name').value.trim();
+        var address = document.getElementById('input-address').value.trim();
+        var phone   = document.getElementById('input-phone').value.trim();
+        var errorEl = document.getElementById('error-msg');
+
+        // ── Step 2: Validate all fields ──
+        // Check that every required piece of information has been provided
+        if (!name) {
+          showError(errorEl, 'Please enter your full name.');
+          return;
+        }
+        if (!address) {
+          showError(errorEl, 'Please enter your address.');
+          return;
+        }
+        if (!phone) {
+          showError(errorEl, 'Please enter your phone number.');
+          return;
+        }
+
+        // ── Step 3: Phone must have at least 10 digits ──
+        // Strip all non-digit characters then check length
+        var digitsOnly = phone.replace(/\D/g, '');
+        if (digitsOnly.length < 10) {
+          showError(errorEl, 'Please enter a valid phone number (at least 10 digits).');
+          return;
+        }
+
+        if (!selectedStylist) {
+          showError(errorEl, 'Please pick a braider.');
+          return;
+        }
+        if (!selectedDate) {
+          showError(errorEl, 'Please select a date.');
+          return;
+        }
+        if (!selectedTime) {
+          showError(errorEl, 'Please select a time.');
+          return;
+        }
+
+        // All validation passed — hide any previous error message
+        errorEl.classList.add('hidden');
+        errorEl.textContent = '';
+
+        // ── Step 4: Send email via EmailJS ──
+        // The template variables below must match the variable names
+        // you set up in your EmailJS email template exactly.
+        //
+        // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with
+        // the values from your EmailJS dashboard.
+        emailjs.send('service_n5ioj3b', 'template_dcdzohj', {
+          from_name: name,
+          phone:     phone,
+          address:   address,
+          service:   selectedService,
+          price:     selectedPrice,
+          duration:  selectedDuration,
+          stylist:   selectedStylist,
+          date:      selectedDate,
+          time:      selectedTime
+        })
+        .then(function() {
+          // ── Step 5: Success ──
+          // Mark the braider as booked so she can't be selected again
+          markStylistAsBooked(selectedStylist);
+
+          // Show the success message and scroll it into view smoothly
+          var msg = document.getElementById('success-message');
+          msg.classList.remove('hidden');
+          msg.scrollIntoView({ behavior: 'smooth' });
+
+          // Disable the confirm button to prevent duplicate submissions
+          var btn = document.getElementById('confirm-btn');
+          btn.disabled = true;
+          btn.textContent = 'Booking sent ✓';
+          btn.classList.remove('bg-stone-900');
+          btn.classList.add('bg-stone-400', 'cursor-not-allowed');
+        })
+        .catch(function(error) {
+          // If EmailJS fails, show a friendly error rather than crashing
+          showError(errorEl, 'Could not send booking. Please check your internet connection and try again.');
+          console.error('EmailJS error:', error);
+        });
+      }
+
+
+      // ── showError ─────────────────────────────────────────────────────
+      // Helper function — shows a validation error message below the form.
+      // Keeps confirmBooking() clean by centralising the error display logic.
+      function showError(el, message) {
+        el.textContent = message;
+        el.classList.remove('hidden');
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+    </script>
+
+  </body>
+</html>
